@@ -80,7 +80,7 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#37474F',
+    backgroundColor: 'rgb(0, 126, 229)',
   },
   header: {
     flexDirection: 'row',
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   button: {
-    backgroundColor: '#37474F',
+    backgroundColor: 'rgb(37, 61, 144)',
     width: '50%',
     height: '30%',
     alignItems: 'center',
