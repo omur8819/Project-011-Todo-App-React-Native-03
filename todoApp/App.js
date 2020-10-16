@@ -1,113 +1,137 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-import React from 'react';
+import React, {useState, useEffect, useReducer} from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
   View,
+  StyleSheet,
   Text,
-  StatusBar,
+  TextInput,
+  TouchableOpacity,
+  Dimensions,
+  FlatList,
 } from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {ToDoCard} from './components';
 
-const App: () => React$Node = () => {
+const App = () => {
+  const [todo, setTodo] = useState('');
+  const [todoList, setTodoList] = useState([]);
+  const [todoId, setId] = useState(0);
+
+  const addTodo = () => {
+    for (let item of todoList) {
+      if (item.text == todo) {
+        return alert("You've already had this ToDo!");
+      }
+    }
+    setTodoList([{text: todo, id: todoId}, ...todoList]);
+  };
+
+  const getInput = (text) => {
+    setTodo(text);
+  };
+
+  const deleteTodo = (currentTodosId) =>
+    setTodoList(todoList.filter((todo) => todo.id !== currentTodosId));
+
   return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.heading}>TODO</Text>
+        <Text style={styles.counter}>{todoList.length}</Text>
+      </View>
+
+      <View style={styles.main}>
+        <FlatList
+          keyExtractor={(item) => item.id.toString()}
+          data={todoList}
+          renderItem={({item}) => (
+            <ToDoCard content={item} deleteTodo={deleteTodo} />
           )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
+        />
+      </View>
+
+      <View style={styles.footer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Type here to add your ToDo!"
+          onChangeText={getInput}
+          onSubmitEditing={(event) => {
+            setTodo(event.nativeEvent.text);
+            addTodo();
+            setId(todoId + 1);
+            setTodo('');
+          }}
+          autoFocus={true}
+          value={todo}
+        />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            addTodo();
+            setId(todoId + 1);
+            setTodo('');
+          }}>
+          <Text style={styles.btnText}>ADD TODO</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  container: {
+    flex: 1,
+    backgroundColor: '#37474F',
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: 15,
+    marginVertical: 10,
   },
-  body: {
-    backgroundColor: Colors.white,
+  heading: {
+    color: '#FBA730',
+    fontWeight: 'bold',
+    fontSize: 35,
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  counter: {
+    color: '#FBA730',
+    fontSize: 30,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
+
+  main: {
+    flex: 1,
+    alignItems: 'center',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
+
   footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
+    backgroundColor: '#B0BEC5',
+    marginHorizontal: 10,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: Dimensions.get('window').height / 5,
+    marginBottom: 25,
+  },
+  input: {
+    backgroundColor: '#FFFFFF',
+    width: '85%',
+    height: '32%',
+    borderRadius: 10,
+    marginVertical: 10,
+  },
+  button: {
+    backgroundColor: '#37474F',
+    width: '50%',
+    height: '30%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  btnText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
   },
 });
 
