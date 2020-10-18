@@ -1,24 +1,32 @@
-import React from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView, Text, View, KeyboardAvoidingView. Flatlist } from 'react-native';
 
 import { main } from './styles';
 import TodoInput from './components/TodoInput';
 
 const Main = () => {
+
+    const [list, setList] = useState([])
+
+    function addTodo(text) {
+        console.log(text)
+    }
+
     return (
         <SafeAreaView style={main.container}>
-            <View style={main.container}>
+            <KeyboardAvoidingView style={main.container}>
 
                 <View style={main.banner}>
                     <Text style={main.todoText}>TODO</Text>
                     <Text style={main.todoCount}>10</Text>
                 </View>
 
-                <TodoInput
-                    onTodoEnter={todoText => alert(todoText)}
+                <Flatlist 
+                    data={list}
+                    renderItem={() => null}
                 />
 
-            </View>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
 }
