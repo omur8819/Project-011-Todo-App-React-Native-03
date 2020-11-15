@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { SafeAreaView, Text, View, KeyboardAvoidingView, FlatList } from 'react-native';
 
 import { main } from './styles';
-import { TodoInput, TodoCard } from './components';
+import { TodoInput, TodoCard } from './components/index';
 
 const Main = () => {
     const [list, setList] = useState([])
